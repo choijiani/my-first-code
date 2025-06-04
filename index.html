@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P 500 Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {font-family: Arial, sans-serif; margin: 20px;}
+        #chart-container {width: 100%; max-width: 800px; margin: auto;}
+    </style>
+</head>
+<body>
+    <h1>S&P 500 Daily Close Prices</h1>
+    <p>This page fetches S&P 500 data from the Alpha Vantage API and displays a simple line chart.</p>
+    <div id="chart-container">
+        <canvas id="spChart"></canvas>
+    </div>
+
+    <script>
+    async function fetchData() {
+        const apiKey = 'demo'; // Replace with your Alpha Vantage API key for production use
+        const symbol = 'SPY'; // Using SPY ETF as a proxy for S&P 500
+        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!data['Time Series (Daily)']) {
+            throw new Error('Invalid API response');
+        }
+        const timeSeries = data['Time Series (Daily)'];
+        const labels = Object.keys(timeSeries).slice(0, 100).reverse(); // last 100 days
+        const prices = labels.map(date => parseFloat(timeSeries[date]['4. close']));
+        return {labels, prices};
+    }
+
+    function renderChart(labels, prices) {
+        const ctx = document.getElementById('spChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'S&P 500 (SPY)',
+                    data: prices,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {display: true, title: {display: true, text: 'Date'}},
+                    y: {display: true, title: {display: true, text: 'Close Price (USD)'}}
+                }
+            }
+        });
+    }
+
+    fetchData().then(data => {
+        renderChart(data.labels, data.prices);
+    }).catch(err => {
+        console.error('Error fetching data', err);
+        document.body.insertAdjacentHTML('beforeend', '<p>Failed to load data from Alpha Vantage. Please check your API key or try again later.</p>');
+    });
+    </script>
+</body>
+</html>
