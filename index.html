@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>간단한 계산기</title>
+<style>
+  body { font-family: sans-serif; margin: 2em; }
+  input[type="number"] { width: 80px; }
+  #result { margin-top: 1em; font-weight: bold; }
+</style>
+</head>
+<body>
+  <h1>더하기 계산기</h1>
+  <input type="number" id="num1">
+  <span>+</span>
+  <input type="number" id="num2">
+  <button id="addBtn">더하기</button>
+  <div id="result"></div>
+<script>
+  document.getElementById('addBtn').addEventListener('click', function() {
+    const num1 = parseFloat(document.getElementById('num1').value) || 0;
+    const num2 = parseFloat(document.getElementById('num2').value) || 0;
+    document.getElementById('result').textContent = '결과: ' + (num1 + num2);
+  });
+</script>
+</body>
+</html>
