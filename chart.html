@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chart.js Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chart-container { width: 600px; height: 400px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+<div id="chart-container">
+    <canvas id="myChart"></canvas>
+</div>
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Sales',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+        }]
+    },
+    options: {
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+</body>
+</html>
